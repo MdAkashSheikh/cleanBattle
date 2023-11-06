@@ -48,6 +48,14 @@ const {
 } = require('../controllers/priorityGroup');
 
 const { 
+    postTypeWork, 
+    editTypeWork, 
+    getTypeWork,
+    deleteTypeWork,
+    toggleTypeWork
+} = require('../controllers/typeWorkCtl');
+
+const { 
     postZone, 
     getZone, 
     editZone, 
@@ -85,6 +93,13 @@ router.post('/edit-potential/:id', editPotential);
 router.get('/get-potential', getPotential);
 router.delete('/delete-potential/:id', deletePotential);
 router.post('/toggle-potential/:id', togglePotential);
+
+//Type Of Work Route URL
+router.post('/post-type-work', postTypeWork);
+router.post('/edit-type-work/:id', editTypeWork);
+router.get('/get-type-work', getTypeWork);
+router.delete('/delete-type-work/:id', deleteTypeWork);
+router.post('/toggle-type-work/:id', toggleTypeWork);
 
 //Zone Route URL
 router.post('/post-zone', postZone);

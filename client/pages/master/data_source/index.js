@@ -60,7 +60,7 @@ const Data_Source = () => {
 
         console.log("PPPP1",sourceData)
 
-        if( sourceData.name && sourceData.details, sourceData._id) {
+        if( sourceData.name && sourceData._id) {
             DataSourceService.editDataSource(
                 sourceData.name,
                 sourceData.details,
@@ -70,7 +70,7 @@ const Data_Source = () => {
                 setDataDialog(false);
                 toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Data Source is Updated', life: 3000 });
             })
-        } else if( sourceData.name && sourceData.details) {
+        } else if( sourceData.name ) {
             DataSourceService.postDataSource(
                 sourceData.name,
                 sourceData.details,

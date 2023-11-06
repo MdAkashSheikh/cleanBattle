@@ -65,14 +65,10 @@ const AppMenu = () => {
                             to: '/master/data_group'
                         },
                         {
-                            label: 'Priority Group',
-                            icon: 'pi pi-fw pi-angle-double-up',
-                            to: '/master/priority_group'
-                        },
-                        {
-                            label: 'Potential Customer Group',
+                            label: 'Type of Work',
                             icon: 'pi pi-fw pi-users',
-                            to: '/master/potential_customer'
+                            to: '/master/type_of_work'
+                            
                         },
                         {
                             label: 'Zone',

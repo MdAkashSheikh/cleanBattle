@@ -9,20 +9,22 @@ import { ToggleButton } from 'primereact/togglebutton';
 import { Toolbar } from 'primereact/toolbar';
 import { classNames } from 'primereact/utils';
 import React, { useEffect, useRef, useState } from 'react';
-import { ZoneService } from '../../../demo/service/ZoneService';
+import { DataGroupService } from '../../../demo/service/DataGroupService';
+import { TypeOfWorkServices } from '../../../demo/service/TypeOfWorkServices';
 
-const Zone = () => {
-    let emptyZone = {
+const Types_Of_Work = () => {
+    let emptyWork = {
         id: 0,
         name: '',
+        basePrice: '',
         is_active: '',
         details: '',
     };
 
-    const [zoneDatas, setZoneDatas] = useState(null);
+    const [typeDatas, setTypeDatas] = useState(null);
     const [dataDialog, setDataDialog] = useState(false);
     const [deleteDataDialog, setDeleteDataDialog] = useState(false);
-    const [zoneData, setZoneData] = useState(emptyZone);
+    const [typeData, setTypeData] = useState(emptyWork);
     const [selectedDatas, setSelectedDatas] = useState(null);
     const [submitted, setSubmitted] = useState(false);
     const [globalFilter, setGlobalFilter] = useState(null);
@@ -33,14 +35,14 @@ const Zone = () => {
 
     useEffect(() => {
 
-        ZoneService.getZone().then((res) => setZoneDatas(res.data.AllData));
+        TypeOfWorkServices.getTypeWork().then((res) => setTypeDatas(res.data.AllData));
 
     }, [toggleRefresh]);
 
-    console.log(zoneDatas, "SOURCE DATAS")
+    console.log(typeDatas, "Types DATAS")
 
     const openNew = () => {
-        setZoneData(emptyZone);
+        setTypeData(emptyWork);
         setSubmitted(false);
         setDataDialog(true);
     };
@@ -58,47 +60,49 @@ const Zone = () => {
     const saveData = () => {
         setSubmitted(true);
 
-        console.log("PPPP1",zoneData)
+        console.log("PPPP1",typeData)
 
-        if( zoneData.name && zoneData._id) {
-            ZoneService.editZone(
-                zoneData.name,
-                zoneData.details,
-                zoneData._id,
+        if( typeData.name && typeData.basePrice, typeData._id) {
+            TypeOfWorkServices.editTypeWork(
+                typeData.name,
+                typeData.basePrice,
+                typeData.details,
+                typeData._id,
             ).then(() => {
                 setTogleRefresh(!toggleRefresh);
                 setDataDialog(false);
-                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Zone is Updated', life: 3000 });
+                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Types of Work is Updated', life: 3000 });
             })
-        } else if( zoneData.name ) {
-            ZoneService.postZone(
-                zoneData.name,
-                zoneData.details,
+        } else if( typeData.name && typeData.basePrice) {
+            TypeOfWorkServices.postTypeWork(
+                typeData.name,
+                typeData.basePrice,
+                typeData.details,
             ).then(() => {
                 setTogleRefresh(!toggleRefresh);
                 setDataDialog(false);
-                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'New Zone is Created', life: 3000 });
+                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'New Types of Work is Created', life: 3000 });
             })
         }
     };
 
-    const editData = (zoneData) => {
-        setZoneData({ ...zoneData });
+    const editData = (typeData) => {
+        setTypeData({ ...typeData });
         setDataDialog(true);
     };
 
 
-    const confirmDeleteData = (zoneData) => {
-        setZoneData(zoneData);
+    const confirmDeleteData = (typeData) => {
+        setTypeData(typeData);
         setDeleteDataDialog(true);
     };
 
     const deleteData = () => {
-        ZoneService.deleteZone(zoneData._id).then(() => {
+        TypeOfWorkServices.deleteTypeWork(typeData._id).then(() => {
             setTogleRefresh(!toggleRefresh);
             setDeleteDataDialog(false);
-            setZoneData(emptyZone);
-            toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Zone is Deleted', life: 3000 });
+            setTypeData(emptyWork);
+            toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Data Group is Deleted', life: 3000 });
         })
     };
 
@@ -106,17 +110,26 @@ const Zone = () => {
 
     const onInputChange = (e, name) => {
         const val = (e.target && e.target.value) || '';
-        let data = { ...zoneData };
+        let data = { ...typeData };
         data[`${name}`] = val;
 
-        setZoneData(data);
+        setTypeData(data);
     };
 
-    const priorityGroupBodyTemplate = (rowData) => {
+    const nameBodyTemplate = (rowData) => {
         return (
             <>
                 <span className="p-column-title">Name</span>
                 {rowData.name}
+            </>
+        );
+    }
+
+    const basePriceBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Base Price</span>
+                {rowData.basePrice}
             </>
         );
     }
@@ -138,8 +151,8 @@ const Zone = () => {
                 if (rowData.is_active == '0') {
                     is_active = '1'
                 }
-                ZoneService.toggleZone(is_active, rowData._id).then(() => {
-                setTogleRefresh(!toggleRefresh)
+                TypeOfWorkServices.toggleTypeWork(is_active, rowData._id).then(() => {
+                    setTogleRefresh(!toggleRefresh)
                 })
              }} />
         );
@@ -159,7 +172,7 @@ const Zone = () => {
         return (
             <React.Fragment>
                 <div className="my-2">
-                    <h2 className="m-0">Zone</h2>
+                    <h2 className="m-0">Type Of Work</h2>
                 </div>
             </React.Fragment>
         );
@@ -168,7 +181,7 @@ const Zone = () => {
     const header = (
         <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
             <Button
-                    label="Add Zone"
+                    label="Add Types of Work"
                     icon="pi pi-plus"
                     severity="sucess"
                     className="mr-2"
@@ -194,7 +207,7 @@ const Zone = () => {
         </>
     );
 
-    if(zoneDatas == null) {
+    if(typeDatas == null) {
         return (
             <div className="card">
                 <div className="border-round border-1 surface-border p-4 surface-card">
@@ -230,7 +243,7 @@ const Zone = () => {
                     ></Toolbar>
                     <DataTable
                         ref={dt}
-                        value={zoneDatas}
+                        value={typeDatas}
                         selection={selectedDatas}
                         onSelectionChange={(e) => setSelectedDatas(e.value)}
                         dataKey="id"
@@ -248,9 +261,16 @@ const Zone = () => {
 
                         <Column
                             field="name"
-                            header="Zone Name"
+                            header="Work Name"
                             sortable
-                            body={priorityGroupBodyTemplate}
+                            body={nameBodyTemplate}
+                            headerStyle={{ minWidth: "10rem" }}
+                        ></Column>
+                        <Column
+                            field="basePrice"
+                            header="Base Price"
+                            sortable
+                            body={basePriceBodyTemplate}
                             headerStyle={{ minWidth: "10rem" }}
                         ></Column>
                          <Column
@@ -274,7 +294,7 @@ const Zone = () => {
                     <Dialog
                         visible={dataDialog}
                         style={{ width: "450px" }}
-                        header="Add Zone"
+                        header="Add Types of Work"
                         modal
                         className="p-fluid"
                         footer={dataDialogFooter}
@@ -282,24 +302,37 @@ const Zone = () => {
                     >
                 
                         <div className="field">
-                            <label htmlFor="zoneData">Zone Name</label>
+                            <label htmlFor="typeData">Work Name</label>
                             <InputText 
                                 id="name" 
-                                value={zoneData.name} 
+                                value={typeData.name} 
                                 onChange={(e) => onInputChange(e, "name")} 
                                 required 
                                 autoFocus 
-                                className={classNames({ 'p-invalid': submitted && !zoneData.name })} 
-                                />
-                            {submitted && !zoneData.name && <small className="p-invalid">
-                                Zone Name is required.
+                                className={classNames({ 'p-invalid': submitted && !typeData.name })} 
+                            />
+                            {submitted && !typeData.name && <small className="p-invalid">
+                                Data Group is required.
+                            </small>}
+                        </div>
+                        <div className="field">
+                            <label htmlFor="typeData">Base Price</label>
+                            <InputText 
+                                id="basePrice" 
+                                value={typeData.basePrice} 
+                                onChange={(e) => onInputChange(e, "basePrice")} 
+                                required 
+                                className={classNames({ 'p-invalid': submitted && !typeData.basePrice })} 
+                            />
+                            {submitted && !typeData.basePrice && <small className="p-invalid">
+                                Base Price is required.
                             </small>}
                         </div>
                         <div className="field">
                             <label htmlFor="details">Details</label>
                             <InputText 
                                 id="details" 
-                                value={zoneData.details} 
+                                value={typeData.details} 
                                 onChange={(e) => onInputChange(e, "details")} 
                             />
                         </div>
@@ -308,9 +341,9 @@ const Zone = () => {
                     <Dialog visible={deleteDataDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteDataDialogFooter} onHide={hideDeleteProductDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                            {zoneData && (
+                            {typeData && (
                                 <span>
-                                    Are you sure you want to delete <b>{zoneData.name}</b>?
+                                    Are you sure you want to delete <b>{typeData.name}</b>?
                                 </span>
                             )}
                         </div>
@@ -322,4 +355,4 @@ const Zone = () => {
     );
 };
 
-export default  Zone;
+export default  Types_Of_Work;

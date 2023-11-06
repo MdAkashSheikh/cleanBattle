@@ -60,7 +60,7 @@ const Category = () => {
 
         console.log("PPPP1",categoryData)
 
-        if( categoryData.name && categoryData.details, categoryData._id) {
+        if( categoryData.name && categoryData._id) {
             CategoryService.editCategory(
                 categoryData.name,
                 categoryData.details,
@@ -70,7 +70,7 @@ const Category = () => {
                 setDataDialog(false);
                 toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Categoryis Updated', life: 3000 });
             })
-        } else if( categoryData.name && categoryData.details) {
+        } else if( categoryData.name ) {
             CategoryService.postCategory(
                 categoryData.name,
                 categoryData.details,
